@@ -1,4 +1,5 @@
 package com.main;
+import java.io.IOException;
 import java.util.*;
 
 import com.dashboard.Dashboard;
@@ -9,6 +10,9 @@ import com.employee.Manager;
 import com.employee.RegisterUser;
 import com.employee.RegularEmployee;
 import com.employee.UserAccount;
+import com.payrollservice.PrintPaySlip;
+import com.payrollservice.FileService;
+import com.payrollservice.GeneratePaySlip;
 import com.payrollservice.PaySlip;
 import com.payrollservice.PayrollService;
 import com.security.HashPassword;
@@ -40,7 +44,8 @@ public class Main {
 		System.out.println("WELCOME TO EMPLOYEE PAYROLL APP");
 		System.out.println("-------------------------------");
 		
-		
+		PaySlip payslip = null;
+		PrintPaySlip paySlip=null;
 		System.out.print("Login || SignUp ? ::: ");
 		String choice = sc.nextLine();
 		
@@ -59,18 +64,12 @@ public class Main {
 				System.out.println("Please enter a valid option ");
 		}
 		
-		boolean end = false;
-		do{	
+		
 		if(isLoggedIn) {
 			System.out.println("");
-			System.out.println("--------- DASHBOARD---------");
+			System.out.println("---------EMPLOYEE DASHBOARD---------");
 			System.out.println("");
-<<<<<<< Updated upstream
 			System.out.println(" 1. View Profile Info \n 2. Generate PaySlip \n 3. Print PaySlip \n 4. View Dashoard \n 5. Update Profile ");
-=======
-
-			System.out.println(" 1. View Profile Info \n 2. Generate PaySlip \n 3. Print PaySlip \n 4. View Dashoard \n 5. Update Profile \n 6. Exit");
->>>>>>> Stashed changes
 			System.out.print("------Please Select your choice : ");
 			int op = sc.nextInt();
 			sc.nextLine();
@@ -81,22 +80,19 @@ public class Main {
 					break;
 				}
 				case 2:{
-					System.out.println("");
-					System.out.println("------Generate Your PaySlip------");
-					System.out.print("Enter Month (ex - March 2026 : )");
-					String month = sc.nextLine();
-					System.out.print("Enter Basic Salary : ");
-					double basic = sc.nextDouble();sc.nextLine();
-					System.out.print("Enter HRA : ");
-					double hra = sc.nextDouble();sc.nextLine();
-					System.out.print("Enter DA : ");
-					double da = sc.nextDouble();sc.nextLine();
-					System.out.print("Allowances : ");
-					double Allowances = sc.nextDouble(); sc.nextLine();
-					PaySlip payslip = PayrollService.generatePaySlip(employee, month, basic, hra, da, Allowances);
+					GeneratePaySlip generate= new GeneratePaySlip();
+					paySlip = generate.generatePaySlip(sc,employee);
+					break;
+				}
+				case 3:{
+					if(paySlip==null) {
+						GeneratePaySlip generate= new GeneratePaySlip();
+						paySlip = generate.generatePaySlip(sc,employee);
+					}
+					payslip = new PaySlip(employee.getEmpId(),employee.getName(),paySlip.getMonth(),paySlip.getNetPay());
+					System.out.println("Original PaySlip: ");
 					System.out.println("");
 					System.out.println(payslip);
-<<<<<<< Updated upstream
 					PaySlip paySlipClone =(PaySlip) payslip.clone();
 					payslip.equals(paySlipClone);
 					System.out.println("\n\n PaySlip Download Successful.");
@@ -111,34 +107,6 @@ public class Main {
 					}
 					break;
 				}
-=======
-					break;
-				}
-				case 3: {
-				    if (paySlip == null) {
-				        GeneratePaySlip generate = new GeneratePaySlip();
-				        paySlip = generate.generatePaySlip(sc, employee);
-				    }
-				    payslip = new PaySlip(employee.getEmpId(), employee.getName(), paySlip.getMonth(), paySlip.getNetPay());
-				    System.out.println("Original PaySlip: ");
-				    System.out.println("");
-				    System.out.println(payslip);
-				    PaySlip paySlipClone = (PaySlip) payslip.clone();
-				    payslip.equals(paySlipClone);
-				    System.out.println("\n\n PaySlip Download Successful.");
-				    paySlipList.add(payslip);
-				    try {
-				        String textFile = FileService.savePaySlipAsText(payslip);
-				        System.out.println("Saved as text file : " + textFile);
-				        String pdfFile = FileService.savePaySlipAsPdf(payslip);
-				        System.out.println("Saved as PDF file: " + pdfFile);
-				    } catch (IOException e) {
-				        System.out.println(e.getMessage());
-				    }
-				    break;
-				}
-
->>>>>>> Stashed changes
 				case 4: {
 				    if(paySlip == null) {
 				        GeneratePaySlip generate = new GeneratePaySlip();
@@ -149,33 +117,13 @@ public class Main {
 
 				    Dashboard dashboard = DashboardFactory.getDashboard(employee.getRole());
 				    if(dashboard != null) {
-<<<<<<< Updated upstream
 				        dashboard.display(new ArrayList<>(paySlipList), employee);
 				    }
 				    break;
 				}
 
-=======
-				    	System.out.println("");
-				        dashboard.display(new ArrayList<>(paySlipList), employee);
-				    }
-				    break;
-					}
-				case 5:{
-					
-				}
-				case 6:{
-					end = true;
-					break;
-				}
-				}
->>>>>>> Stashed changes
 			}
-		}while(end==false);
 		}
 	}
 
-<<<<<<< Updated upstream
 }
-=======
->>>>>>> Stashed changes

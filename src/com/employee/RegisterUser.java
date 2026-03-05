@@ -6,6 +6,7 @@ import com.validator.EmailValidator;
 import com.validator.EmpIdValidator;
 import com.validator.InvalidDataException;
 import com.validator.NameValidator;
+import com.validator.PasswordValidator;
 import com.validator.PhoneValidator;
 import com.validator.Validator;
 
@@ -24,6 +25,7 @@ public class RegisterUser {
 			
 			System.out.print("Enter your Password : ");
 			String password = sc.nextLine();
+			PasswordValidator.validatePassword(password);
 			String hashedPass = HashPassword.hashPassword(password);
 			
 			UserAccount user = new UserAccount(email,hashedPass);
