@@ -2,6 +2,8 @@ package com.main;
 import java.io.IOException;
 import java.util.*;
 
+import com.dashboard.Dashboard;
+import com.dashboard.DashboardFactory;
 import com.employee.Employee;
 import com.employee.LoginUser;
 import com.employee.Manager;
@@ -20,6 +22,7 @@ import com.validator.InvalidDataException;
 
 public class Main {
 	public static List<Employee> employeeList = new ArrayList<>();
+	public static List<PaySlip> paySlipList = new ArrayList<>();
 	
 	static {
 		UserAccount account01 = new UserAccount("vivek@gmail.com",HashPassword.hashPassword("vivek1010"));
@@ -66,7 +69,7 @@ public class Main {
 			System.out.println("");
 			System.out.println("---------EMPLOYEE DASHBOARD---------");
 			System.out.println("");
-			System.out.println(" 1. View Profile Info \n 2. Generate PaySlip \n 3. Print PaySlip \n 4. Update Profile ");
+			System.out.println(" 1. View Profile Info \n 2. Generate PaySlip \n 3. Print PaySlip \n 4. View Dashoard \n 5. Update Profile ");
 			System.out.print("------Please Select your choice : ");
 			int op = sc.nextInt();
 			sc.nextLine();
@@ -93,6 +96,7 @@ public class Main {
 					PaySlip paySlipClone =(PaySlip) payslip.clone();
 					payslip.equals(paySlipClone);
 					System.out.println("\n\n PaySlip Download Successful.");
+					paySlipList.add(payslip);
 					try {
 						String textFile = FileService.savePaySlipAsText(payslip);
 						System.out.println("Saved as text file : "+textFile);
@@ -101,9 +105,23 @@ public class Main {
 					}catch(IOException e) {
 						System.out.println(e.getMessage());
 					}
-					
 					break;
 				}
+				case 4: {
+				    if(paySlip == null) {
+				        GeneratePaySlip generate = new GeneratePaySlip();
+				        paySlip = generate.generatePaySlip(sc, employee);
+				    }
+				    PaySlip payslipObj = new PaySlip(employee.getEmpId(), employee.getName(), paySlip.getMonth(), paySlip.getNetPay());
+				    paySlipList.add(payslipObj);
+
+				    Dashboard dashboard = DashboardFactory.getDashboard(employee.getRole());
+				    if(dashboard != null) {
+				        dashboard.display(new ArrayList<>(paySlipList), employee);
+				    }
+				    break;
+				}
+
 			}
 		}
 	}
