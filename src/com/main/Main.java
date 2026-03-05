@@ -1,4 +1,5 @@
 package com.main;
+import java.io.IOException;
 import java.util.*;
 
 import com.employee.Employee;
@@ -7,6 +8,9 @@ import com.employee.Manager;
 import com.employee.RegisterUser;
 import com.employee.RegularEmployee;
 import com.employee.UserAccount;
+import com.payrollservice.PrintPaySlip;
+import com.payrollservice.FileService;
+import com.payrollservice.GeneratePaySlip;
 import com.payrollservice.PaySlip;
 import com.payrollservice.PayrollService;
 import com.security.HashPassword;
@@ -37,7 +41,8 @@ public class Main {
 		System.out.println("WELCOME TO EMPLOYEE PAYROLL APP");
 		System.out.println("-------------------------------");
 		
-		
+		PaySlip payslip = null;
+		PrintPaySlip paySlip=null;
 		System.out.print("Login || SignUp ? ::: ");
 		String choice = sc.nextLine();
 		
@@ -61,7 +66,7 @@ public class Main {
 			System.out.println("");
 			System.out.println("---------EMPLOYEE DASHBOARD---------");
 			System.out.println("");
-			System.out.println(" 1. View Profile Info \n 2. View PaySlip \n 3. Update profile ");
+			System.out.println(" 1. View Profile Info \n 2. Generate PaySlip \n 3. Print PaySlip \n 4. Update Profile ");
 			System.out.print("------Please Select your choice : ");
 			int op = sc.nextInt();
 			sc.nextLine();
@@ -72,24 +77,31 @@ public class Main {
 					break;
 				}
 				case 2:{
-					System.out.println("");
-					System.out.println("------Generate Your PaySlip------");
-					System.out.print("Enter Month (ex - March 2026 : )");
-					String month = sc.nextLine();
-					System.out.print("Enter Basic Salary : ");
-					double basic = sc.nextDouble();sc.nextLine();
-					System.out.print("Enter HRA : ");
-					double hra = sc.nextDouble();sc.nextLine();
-					System.out.print("Enter DA : ");
-					double da = sc.nextDouble();sc.nextLine();
-					System.out.print("Allowances : ");
-					double Allowances = sc.nextDouble(); sc.nextLine();
-					PaySlip payslip = PayrollService.generatePaySlip(employee, month, basic, hra, da, Allowances);
-					System.out.println("");
-					System.out.println(payslip);
+					GeneratePaySlip generate= new GeneratePaySlip();
+					paySlip = generate.generatePaySlip(sc,employee);
 					break;
 				}
 				case 3:{
+					if(paySlip==null) {
+						GeneratePaySlip generate= new GeneratePaySlip();
+						paySlip = generate.generatePaySlip(sc,employee);
+					}
+					payslip = new PaySlip(employee.getEmpId(),employee.getName(),paySlip.getMonth(),paySlip.getNetPay());
+					System.out.println("Original PaySlip: ");
+					System.out.println("");
+					System.out.println(payslip);
+					PaySlip paySlipClone =(PaySlip) payslip.clone();
+					payslip.equals(paySlipClone);
+					System.out.println("\n\n PaySlip Download Successful.");
+					try {
+						String textFile = FileService.savePaySlipAsText(payslip);
+						System.out.println("Saved as text file : "+textFile);
+						String pdfFile = FileService.savePaySlipAsPdf(payslip);
+						System.out.println("Saved as PDF file: "+pdfFile);
+					}catch(IOException e) {
+						System.out.println(e.getMessage());
+					}
+					
 					break;
 				}
 			}

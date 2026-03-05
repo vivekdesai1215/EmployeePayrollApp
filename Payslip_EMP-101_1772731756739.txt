@@ -1,0 +1,5 @@
+PAYSLIP
+Employee ID      : EMP-101
+Employee Name    : Vivek
+Month            : March 2026
+Net Pay          : 320100.0

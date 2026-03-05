@@ -3,7 +3,7 @@ package com.payrollservice;
 import com.employee.Employee;
 
 public class PayrollService {
-	public static PaySlip generatePaySlip(Employee employee, String month, double basic, double hra, double da, double allowances) {
+	public static PrintPaySlip generatePaySlip(Employee employee, String month, double basic, double hra, double da, double allowances) {
 		SalaryComponents sc = new SalaryComponents(basic,hra,da,allowances);
 		double gross = basic + hra +da+allowances;
 		
@@ -12,6 +12,6 @@ public class PayrollService {
 		
 		sc.netPay = gross - (sc.pf + sc.tax);
 		
-		return new PaySlip(employee, sc, month);
+		return new PrintPaySlip(employee, sc, month);
 	}
 }
