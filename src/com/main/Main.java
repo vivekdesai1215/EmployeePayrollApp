@@ -7,6 +7,8 @@ import com.employee.Manager;
 import com.employee.RegisterUser;
 import com.employee.RegularEmployee;
 import com.employee.UserAccount;
+import com.payrollservice.PaySlip;
+import com.payrollservice.PayrollService;
 import com.security.HashPassword;
 import com.validator.InvalidDataException;
 
@@ -31,7 +33,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-		Employee employee;
+		Employee employee = null;
 		System.out.println("WELCOME TO EMPLOYEE PAYROLL APP");
 		System.out.println("-------------------------------");
 		
@@ -64,7 +66,33 @@ public class Main {
 			int op = sc.nextInt();
 			sc.nextLine();
 			
-			
+			switch(op) {
+				case 1:{
+					System.out.println(employee);
+					break;
+				}
+				case 2:{
+					System.out.println("");
+					System.out.println("------Generate Your PaySlip------");
+					System.out.print("Enter Month (ex - March 2026 : )");
+					String month = sc.nextLine();
+					System.out.print("Enter Basic Salary : ");
+					double basic = sc.nextDouble();sc.nextLine();
+					System.out.print("Enter HRA : ");
+					double hra = sc.nextDouble();sc.nextLine();
+					System.out.print("Enter DA : ");
+					double da = sc.nextDouble();sc.nextLine();
+					System.out.print("Allowances : ");
+					double Allowances = sc.nextDouble(); sc.nextLine();
+					PaySlip payslip = PayrollService.generatePaySlip(employee, month, basic, hra, da, Allowances);
+					System.out.println("");
+					System.out.println(payslip);
+					break;
+				}
+				case 3:{
+					break;
+				}
+			}
 		}
 	}
 
