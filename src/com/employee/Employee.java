@@ -1,6 +1,6 @@
 package com.employee;
 
-public class Employee {
+public abstract class Employee {
 	private String name;
 	private String email;
 	private String phoneNo;
@@ -11,6 +11,9 @@ public class Employee {
 	private UserAccount account;
 	
 
+	public abstract String getRole();
+	
+	
 	public Employee(String name, String email, String phoneNo, int age, double salary, String empId,
 			UserAccount account) {
 		super();
@@ -72,14 +75,14 @@ public class Employee {
 
 	@Override
 	public String toString() {
-	    return "Employee Details " +
+	    return "Employee Details : " +
 	           "EmpId='" + empId + '\'' +
+	           ", Role='" + getRole() + '\'' +   
 	           ", Name='" + name + '\'' +
 	           ", Email='" + email + '\'' +
 	           ", PhoneNo='" + phoneNo + '\'' +
 	           ", Age=" + age +
-	           ", Salary=" + salary 
-	           ;
+	           ", Salary=" + salary;
 	}
 
 }

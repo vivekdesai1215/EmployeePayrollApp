@@ -1,6 +1,7 @@
 package com.employee;
 import java.util.*;
 
+import com.security.HashPassword;
 import com.validator.EmailValidator;
 import com.validator.EmpIdValidator;
 import com.validator.InvalidDataException;
@@ -23,8 +24,9 @@ public class RegisterUser {
 			
 			System.out.print("Enter your Password : ");
 			String password = sc.nextLine();
+			String hashedPass = HashPassword.hashPassword(password);
 			
-			UserAccount user = new UserAccount(email,password);
+			UserAccount user = new UserAccount(email,hashedPass);
 			
 			System.out.println("User account created successfully !! ");
 			System.out.println("");
@@ -52,15 +54,29 @@ public class RegisterUser {
 			
 			System.out.print("Enter Salary : ");
 			double salary = sc.nextInt();
+			sc.nextLine();
 			
-			 employee =  new Employee( name,  email, phoneNo,  age,  salary,  empId, user); 
+			System.out.println("-----------------------------------");
+			System.out.print("Select the role of Employee : (Regular | Manager) : ");
+			String role = sc.nextLine();
+			if(role.equalsIgnoreCase("manager")) {
+				employee = new Manager( name,  email, phoneNo,  age,  salary,  empId, user); 
+			}
+			else if(role.equalsIgnoreCase("regular")) {
+				employee =  new RegularEmployee( name,  email, phoneNo,  age,  salary,  empId, user); 
+			}
+			else throw new InvalidDataException("The Opted role is Invalid");
+			
+			System.out.println("User Registration Successfull !! ");
+			System.out.println("---------------------------------");
+			System.out.println(employee);
 
 		}catch(InvalidDataException e) {
 			System.out.println(e.getMessage());
 		}
-		System.out.println("User Registration Successfull !! ");
-		System.out.println("---------------------------------");
-		System.out.println(employee.toString());
+		
+		
+		
 		return employee;
 	}
 }
